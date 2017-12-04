@@ -1,0 +1,24 @@
+﻿@font-face {
+    font-family: digital;
+    src: url(../fonts/digital-7.ttf);
+}
+
+.results-text {
+    background-color: darkgrey;
+    width: 150px;
+    height: 40px;
+    font-family: digital;
+    font-size: 45px;
+    width: 210px;
+    border-radius: 5px;
+}
+
+button {
+    border-radius: 5px;
+    width: 50px;
+    text-align: center;
+    background-color: orange;
+    height: 45px;
+    font-weight: bold;
+    font-size: 14px;
+}
