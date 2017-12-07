@@ -11,17 +11,30 @@ $(document).ready(function () {
     });
     $(".number").click(function () {
 
-        var txb = $(".results-text");
-        if (txb.val() !== "0")
-            txb.val(txb.val() + this.innerHTML);
-        else
-            txb.val(this.innerHTML);
+        updateCalulatorText(this.innerHTML);
+        calc.reCalculate(parseInt(this.innerHTML));
+
+
     });
     $("#btn-ac").click(function () {
-        calc = new Calculator(); write();
+        calc = new Calculator();
+        write();
+    });
+
+    $("#btnEqual").click(function () {
+        write();
     });
 
 });
+function updateCalulatorText(number) {
+
+    var txb = $(".results-text");
+    var val = txb.val();
+    if (val == "0" || calc.arithmetic != undefined)
+        txb.val(number);
+    else
+        txb.val(txb.val() + number);
+}
 
 function write() {
 
@@ -35,6 +48,19 @@ function Calculator() {
     this.arithmetic = undefined;
 }
 
+Calculator.prototype.reCalculate = function (number) {
+
+    switch (this.arithmetic) {
+        case "+": this.currentState += number; break;
+        case "-": this.currentState -= number; break;
+        case "x": this.currentState *= number; break;
+        case "&divide;": this.currentState /= number; break;
+        case undefined: this.currentState = number;
+    }
+
+
+};
+
 Calculator.prototype.getResult = function () {
     return this.currentState;
 };
@@ -46,6 +72,8 @@ Calculator.prototype.add = function (value) {
 Calculator.prototype.subtraction = function (value) {
     this.currentState -= value;
 }
+
+
 
 
 
