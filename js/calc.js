@@ -12,7 +12,8 @@ $(document).ready(function () {
     $(".number").click(function () {
 
         updateCalulatorText(this.innerHTML);
-        calc.reCalculate(parseInt(this.innerHTML));
+        var number = $(".results-text").val();
+        calc.reCalculate(parseInt(number));
 
 
     });
