@@ -1,37 +1,46 @@
 // JavaScript source code
 
 var calc = new Calculator();
+var resetText = true;
 
 $(document).ready(function () {
-
-    write();
-
+    var txb = $(".results-text").val("0");
     $(".arithmetic").click(function () {
-        calc.arithmetic = this.innerHTML;
+
+        onArithmeticClick(this.innerHTML);
     });
+
     $(".number").click(function () {
 
         updateCalulatorText(this.innerHTML);
-        var number = $(".results-text").val();
-        calc.reCalculate(parseInt(number));
-
+        resetText = false;
 
     });
-    $("#btn-ac").click(function () {
+    $("#btnReset").click(function () {
         calc = new Calculator();
         write();
     });
 
     $("#btnEqual").click(function () {
-        write();
-    });
 
+        var number = $(".results-text").val();
+        calc.recalculte(parseInt(number));
+        write();       
+    });
 });
+
+function onArithmeticClick(arithmetic) {
+
+    var number = $(".results-text").val();
+    calc.updateArithmetic(parseInt(number), arithmetic);
+    resetText = true;
+    write();    
+}
+
 function updateCalulatorText(number) {
 
     var txb = $(".results-text");
-    var val = txb.val();
-    if (val == "0" || calc.arithmetic != undefined)
+    if (resetText)
         txb.val(number);
     else
         txb.val(txb.val() + number);
@@ -40,17 +49,26 @@ function updateCalulatorText(number) {
 function write() {
 
     var txb = $(".results-text");
-    txb.val(calc.getResult());
+    txb.val(calc.currentState);
 }
 
 function Calculator() {
 
     this.currentState = 0;
     this.arithmetic = undefined;
+    this.chaining = false;
 }
 
-Calculator.prototype.reCalculate = function (number) {
+Calculator.prototype.updateArithmetic = function (number, arithmetic) {
 
+    this.arithmetic = arithmetic;
+    if (this.chaining)
+        this.recalculte(number);
+    else
+        this.currentState = number;
+};
+
+Calculator.prototype.recalculte = function (number) {
     switch (this.arithmetic) {
         case "+": this.currentState += number; break;
         case "-": this.currentState -= number; break;
@@ -59,20 +77,17 @@ Calculator.prototype.reCalculate = function (number) {
         case undefined: this.currentState = number;
     }
 
+    this.chaining = true;
+}
 
-};
 
-Calculator.prototype.getResult = function () {
+Calculator.prototype.getFinalResult = function (number) {
+
+    this.recalculte(number);
     return this.currentState;
 };
 
-Calculator.prototype.add = function (value) {
-    this.currentState += value;
-};
 
-Calculator.prototype.subtraction = function (value) {
-    this.currentState -= value;
-}
 
 
 
