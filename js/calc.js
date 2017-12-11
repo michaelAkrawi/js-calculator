@@ -4,7 +4,15 @@ var calc = new Calculator();
 var resetText = true;
 
 $(document).ready(function () {
-    var txb = $(".results-text").val("0");
+
+    resetCalculator();
+    bindEvents();
+
+
+});
+
+function bindEvents() {
+
     $(".arithmetic").click(function () {
 
         onArithmeticClick(this.innerHTML);
@@ -17,39 +25,61 @@ $(document).ready(function () {
 
     });
     $("#btnReset").click(function () {
-        calc = new Calculator();
-        write();
+        resetCalculator();
     });
 
     $("#btnEqual").click(function () {
-
-        var number = $(".results-text").val();
-        calc.recalculte(parseInt(number));
-        write();       
+       // write();
+       var numberOnTheScreen = $(".results-text").val();
+       resetText = true;
+       var res = calc.getArithmetic(parseInt( numberOnTheScreen));
+       $('.results-text').val(res);
+       calc.currentState = 0;
+       calc.chaining = true;
     });
-});
+}
+
+function resetCalculator() {
+
+    var txb = $(".results-text").val("0");
+    calc = new Calculator();
+    resetText= true;
+    write();
+}
 
 function onArithmeticClick(arithmetic) {
 
-    var number = $(".results-text").val();
-    calc.updateArithmetic(parseInt(number), arithmetic);
+    if(calc.chaining)
+    {
+        var numberOnTheScreen = $(".results-text").val();
+        var res = calc.getArithmetic(parseInt( numberOnTheScreen));
+        $('.results-text').val(res);
+        calc.currentState = 0;
+    }
+    
+    calc.arithmetic = arithmetic;
     resetText = true;
-    write();    
+    calc.chaining = true;
+   
+    //write();
 }
 
 function updateCalulatorText(number) {
 
     var txb = $(".results-text");
-    if (resetText)
+    if (resetText) {
+        calc.currentState = parseInt(txb.val());
         txb.val(number);
+    }
     else
         txb.val(txb.val() + number);
 }
 
 function write() {
 
-    var txb = $(".results-text");
-    txb.val(calc.currentState);
+    var numberOnScreen = $(".results-text").val();
+    var result = calc.getArithmetic(parseInt(numberOnScreen));
+    $(".results-text").val(result);
 }
 
 function Calculator() {
@@ -59,25 +89,22 @@ function Calculator() {
     this.chaining = false;
 }
 
-Calculator.prototype.updateArithmetic = function (number, arithmetic) {
+Calculator.prototype.getArithmetic = function (number) {
 
-    this.arithmetic = arithmetic;
-    if (this.chaining)
-        this.recalculte(number);
-    else
-        this.currentState = number;
+    return this.recalculte(number);
+
 };
 
 Calculator.prototype.recalculte = function (number) {
     switch (this.arithmetic) {
-        case "+": this.currentState += number; break;
-        case "-": this.currentState -= number; break;
-        case "x": this.currentState *= number; break;
-        case "&divide;": this.currentState /= number; break;
-        case undefined: this.currentState = number;
+        case "+": return this.currentState + number;
+        case "-": return this.currentState - number;
+        case "x": return this.currentState * number;
+        case "&divide;": return this.currentState / number;
+        case undefined: return number;
     }
 
-    this.chaining = true;
+    ;
 }
 
 
