@@ -8,7 +8,6 @@ $(document).ready(function () {
     resetCalculator();
     bindEvents();
 
-
 });
 
 function bindEvents() {
@@ -32,8 +31,8 @@ function bindEvents() {
        // write();
        var numberOnTheScreen = $(".results-text").val();
        resetText = true;
-       var res = calc.getArithmetic(parseInt( numberOnTheScreen));
-       $('.results-text').val(res);
+       var res = calc.getArithmetic(parseFloat(numberOnTheScreen));
+       $('.results-text').val(res.toString());
        calc.currentState = 0;
        calc.chaining = true;
     });
@@ -52,7 +51,7 @@ function onArithmeticClick(arithmetic) {
     if(calc.chaining)
     {
         var numberOnTheScreen = $(".results-text").val();
-        var res = calc.getArithmetic(parseInt( numberOnTheScreen));
+        var res = calc.getArithmetic(parseFloat( numberOnTheScreen));
         $('.results-text').val(res);
         calc.currentState = 0;
     }
@@ -67,8 +66,12 @@ function onArithmeticClick(arithmetic) {
 function updateCalulatorText(number) {
 
     var txb = $(".results-text");
-    if (resetText) {
-        calc.currentState = parseInt(txb.val());
+    if(txb.val().indexOf(".") != -1 && number === "."){
+        return;
+    }
+    
+    if (resetText && number!= ".") {
+        calc.currentState = parseFloat(txb.val());
         txb.val(number);
     }
     else
@@ -78,7 +81,7 @@ function updateCalulatorText(number) {
 function write() {
 
     var numberOnScreen = $(".results-text").val();
-    var result = calc.getArithmetic(parseInt(numberOnScreen));
+    var result = calc.getArithmetic(parseFloat(numberOnScreen));
     $(".results-text").val(result);
 }
 
