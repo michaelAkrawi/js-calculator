@@ -28,13 +28,10 @@ function bindEvents() {
     });
 
     $("#btnEqual").click(function () {
-       // write();
-       var numberOnTheScreen = $(".results-text").val();
-       resetText = true;
-       var res = calc.getArithmetic(parseFloat(numberOnTheScreen));
-       $('.results-text').val(res.toString());
-       calc.currentState = 0;
-       calc.chaining = true;
+        resetText = true;
+        write();
+        calc.currentState = 0;
+        calc.chaining = true;
     });
 }
 
@@ -42,35 +39,30 @@ function resetCalculator() {
 
     var txb = $(".results-text").val("0");
     calc = new Calculator();
-    resetText= true;
+    resetText = true;
     write();
 }
 
 function onArithmeticClick(arithmetic) {
 
-    if(calc.chaining)
-    {
-        var numberOnTheScreen = $(".results-text").val();
-        var res = calc.getArithmetic(parseFloat( numberOnTheScreen));
-        $('.results-text').val(res);
+    if (calc.chaining) {       
+        write();
         calc.currentState = 0;
     }
-    
+
     calc.arithmetic = arithmetic;
     resetText = true;
     calc.chaining = true;
-   
-    //write();
 }
 
 function updateCalulatorText(number) {
 
     var txb = $(".results-text");
-    if(txb.val().indexOf(".") != -1 && number === "."){
+    if (txb.val().indexOf(".") != -1 && number === ".") {
         return;
     }
-    
-    if (resetText && number!= ".") {
+
+    if (resetText && number != ".") {
         calc.currentState = parseFloat(txb.val());
         txb.val(number);
     }
@@ -104,18 +96,12 @@ Calculator.prototype.recalculte = function (number) {
         case "-": return this.currentState - number;
         case "x": return this.currentState * number;
         case "&divide;": return this.currentState / number;
+        case "%": return this.currentState % number;
         case undefined: return number;
     }
 
     ;
 }
-
-
-Calculator.prototype.getFinalResult = function (number) {
-
-    this.recalculte(number);
-    return this.currentState;
-};
 
 
 
