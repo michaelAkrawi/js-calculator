@@ -33,6 +33,21 @@ function bindEvents() {
         calc.currentState = 0;
         calc.chaining = true;
     });
+
+    $("#btnOps").click(function(){
+        var txb = $(".results-text");
+        if(txb.val()!== "0"){
+            var numberOnScreen = txb.val();
+            if(numberOnScreen.indexOf("-")== -1){
+            txb.val("-" + numberOnScreen);
+             }
+             else{
+                 var abs = Math.abs(parseFloat(numberOnScreen));
+                txb.val(abs);
+             }
+        }
+        
+    });
 }
 
 function resetCalculator() {
@@ -96,7 +111,6 @@ Calculator.prototype.recalculte = function (number) {
         case "-": return this.currentState - number;
         case "x": return this.currentState * number;
         case "&divide;": return this.currentState / number;
-        case "%": return this.currentState % number;
         case undefined: return number;
     }
 
